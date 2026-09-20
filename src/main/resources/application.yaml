@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: furniture-ecom
+
+  datasource:
+    url: jdbc:postgresql://localhost:8899/db_local
+    username: postgres
+    password: postgres123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8081

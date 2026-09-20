@@ -1,0 +1,57 @@
+name: furniture-ecom
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: db_local
+    ports:
+      - "8899:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d db_local" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - backend
+
+  keyclock:
+    image: quay.io/keycloak/keycloak:26.7.4
+    container_name: keyclock
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: http://localhost:9999
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres123
+    ports:
+      - "9999:8080"
+    volumes:
+      - keyclock:/opt/keycloak/data
+      - ./keycloak/start-dev.sh:/opt/keycloak/start-local.sh:ro
+    entrypoint: [ "/bin/bash", "/opt/keycloak/start-local.sh" ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  keyclock:
+  postgres_data:
