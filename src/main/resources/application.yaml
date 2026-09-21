@@ -2,6 +2,26 @@ spring:
   application:
     name: furniture-ecom
 
+  config:
+    import: optional:file:.env[.properties]
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9999/realms/furniture-ecom
+#          audiences: furniture-ecom-api
+      client:
+        registration:
+          keycloak-admin:
+            provider: keycloak
+            client-id: oauth2-client-credential
+            client-secret: ${KEYCLOCK_ADMIN_SECRET}
+            authorization-grant-type: client_credentials
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:9999/realms/furniture-ecom
+
   datasource:
     url: jdbc:postgresql://localhost:8899/db_local
     username: postgres
@@ -14,6 +34,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+
+keycloak:
+  admin:
+    base-url: http://localhost:9999
+    realm: furniture-ecom
+  client-id: oauth2-client-credential
+  client-secret: ${KEYCLOCK_ADMIN_SECRET}
 
 server:
   port: 8081

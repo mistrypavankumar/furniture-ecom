@@ -1,9 +1,8 @@
 package com.pavan.furniture_ecom.service;
 
-import com.pavan.furniture_ecom.dto.user.UserCreateRequest;
-import com.pavan.furniture_ecom.dto.user.UserResponse;
+import com.pavan.furniture_ecom.model.User;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 public interface UserService {
-
-    UserResponse createUser(UserCreateRequest userCreateRequest);
+    User resolveUser(Jwt jwt);
 }

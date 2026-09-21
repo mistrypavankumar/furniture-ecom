@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "tbl_user")
@@ -25,6 +26,9 @@ public class User {
     private String firstName;
     private String lastName;
 
+    @Column(unique = true, nullable = false)
+    private String keycloakId;
+
     @Column(unique = true)
     private String email;
 
@@ -37,7 +41,8 @@ public class User {
     @Builder.Default
     private Boolean active = false;
 
-//    private String role;
+//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private HashSet<Role> roles = new HashSet<>();
 
     @CreationTimestamp
     @Column(updatable = false)
