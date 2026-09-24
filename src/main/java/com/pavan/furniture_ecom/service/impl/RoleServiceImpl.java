@@ -109,6 +109,13 @@ public class RoleServiceImpl implements RoleService {
         return userService.getUsersByRoleId(id);
     }
 
+    @Override
+    public Role findByRoleId(Long roleId) {
+        return roleRepository.findById(roleId).orElseThrow(() -> new AppException("Role not found with id: " + roleId,
+                HttpStatus.NOT_FOUND,
+                "ROLE_NOT_FOUND"));
+    }
+
     private RoleResponse mapToRoleResponse(Role role) {
         return RoleResponse.builder()
                 .id(role.getId())
