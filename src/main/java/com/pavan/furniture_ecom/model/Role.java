@@ -23,4 +23,8 @@ public class Role extends Auditable {
 
     @Builder.Default
     private Boolean isAdmin = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

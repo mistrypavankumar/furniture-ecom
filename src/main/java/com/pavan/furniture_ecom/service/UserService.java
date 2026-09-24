@@ -10,4 +10,10 @@ public interface UserService {
     User resolveUser(Jwt jwt);
 
     List<UserResponse> getAllUsers();
+
+    UserResponse getUserById(Long id);
+
+    User findUserById(Long userId);
+
+    UserResponse getCurrentAppUser();
 }

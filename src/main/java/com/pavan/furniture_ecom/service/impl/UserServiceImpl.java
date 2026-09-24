@@ -1,15 +1,21 @@
 package com.pavan.furniture_ecom.service.impl;
 
 import com.pavan.furniture_ecom.dto.user.UserResponse;
+import com.pavan.furniture_ecom.exception.AppException;
 import com.pavan.furniture_ecom.model.User;
 import com.pavan.furniture_ecom.repository.UserRepository;
 import com.pavan.furniture_ecom.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +41,38 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public UserResponse getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException("User not found with id " + id,
+                HttpStatus.NOT_FOUND,
+                "USER_NOT_FOUND"));
+        return mapToUserResponse(user);
+    }
+
+    @Override
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new AppException("User not found with id: " + userId,
+                HttpStatus.NOT_FOUND,
+                "USER_NOT_FOUND"));
+    }
+
+    @Override
+    public UserResponse getCurrentAppUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
+            String keycloakId = jwtAuthenticationToken.getToken().getSubject();
+
+            Optional<User> user = userRepository.findByKeycloakId(keycloakId);
+
+            User userData = user.orElseThrow(() -> new AppException("Invalid user", HttpStatus.UNAUTHORIZED,
+                    "UNAUTHORIZED"));
+            return mapToUserResponse(userData);
+        }
+
+        return null;
+    }
+
     private UserResponse mapToUserResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())
@@ -42,6 +80,7 @@ public class UserServiceImpl implements UserService {
                 .lastName(user.getLastName())
                 .active(user.getActive())
                 .email(user.getEmail())
+                .roles(user.getRoles())
                 .isAdmin(user.getIsAdmin())
                 .createdBy(user.getCreatedBy())
                 .lastModifiedBy(user.getLastModifiedBy())

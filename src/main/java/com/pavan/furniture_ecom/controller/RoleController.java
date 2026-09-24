@@ -7,6 +7,7 @@ import com.pavan.furniture_ecom.model.Role;
 import com.pavan.furniture_ecom.service.RoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,5 +34,20 @@ public class RoleController {
     @PutMapping("/{id}")
     public ResponseEntity<RoleResponse> updateRole(@PathVariable("id") Long id,  @Valid @RequestBody RoleUpdateInput input) {
         return ResponseEntity.status(HttpStatus.OK).body(roleService.updateRole(id, input));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteRole(@PathVariable("id") Long id) {
+
+        if(roleService.deleteRoleById(id)){
+            return ResponseEntity.status(HttpStatus.OK).body("Role has been deleted");
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role with id " + id + " not found");
+    }
+
+    @PutMapping("/{id}/assign/{userId}")
+    public ResponseEntity<RoleResponse> assignUserToRole(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(roleService.assignUserToRole(id, userId));
     }
 }

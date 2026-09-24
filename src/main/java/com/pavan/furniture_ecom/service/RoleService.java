@@ -13,4 +13,8 @@ public interface RoleService {
     List<RoleResponse> getAllRoles();
 
     RoleResponse updateRole(Long id, @Valid RoleUpdateInput input);
+
+    boolean deleteRoleById(Long id);
+
+    RoleResponse assignUserToRole(Long id, Long userId);
 }

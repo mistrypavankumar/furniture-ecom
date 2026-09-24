@@ -6,14 +6,12 @@ import com.pavan.furniture_ecom.dto.auth.TokenResponse;
 import com.pavan.furniture_ecom.dto.user.UserResponse;
 import com.pavan.furniture_ecom.keycloak.KeycloakAuthClient;
 import com.pavan.furniture_ecom.service.AuthService;
+import com.pavan.furniture_ecom.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserService userService;
     private final KeycloakAuthClient keycloakAuthClient;
 
 
@@ -32,6 +31,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.login(loginRequest));
+    }
+
+    @GetMapping
+    public ResponseEntity<UserResponse> getCurrentAppUser(){
+        return ResponseEntity.ok(userService.getCurrentAppUser());
     }
 
 }
