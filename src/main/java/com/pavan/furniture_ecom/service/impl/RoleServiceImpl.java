@@ -7,6 +7,7 @@ import com.pavan.furniture_ecom.dto.user.UserResponse;
 import com.pavan.furniture_ecom.exception.AppException;
 import com.pavan.furniture_ecom.model.Role;
 import com.pavan.furniture_ecom.model.User;
+import com.pavan.furniture_ecom.model.enums.PowerRole;
 import com.pavan.furniture_ecom.repository.RoleRepository;
 import com.pavan.furniture_ecom.repository.UserRepository;
 import com.pavan.furniture_ecom.service.RoleService;
@@ -89,6 +90,11 @@ public class RoleServiceImpl implements RoleService {
                 "ROLE_NOT_FOUND"));
 
         User user = userService.findUserById(userId);
+
+        if(role.getName().equals(PowerRole.ADMIN.toString()) && role.getIsAdmin()){
+            user.setIsAdmin(true);
+        }
+
         user.getRoles().add(role);
         role = roleRepository.save(role);
         return mapToRoleResponse(role);
