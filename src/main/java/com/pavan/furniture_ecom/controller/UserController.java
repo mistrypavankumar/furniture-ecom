@@ -1,25 +1,23 @@
 package com.pavan.furniture_ecom.controller;
 
-import com.pavan.furniture_ecom.dto.auth.RegisterRequest;
 import com.pavan.furniture_ecom.dto.user.UserResponse;
-import com.pavan.furniture_ecom.service.AuthService;
+import com.pavan.furniture_ecom.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
-    private final AuthService authService;
+    private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<UserResponse> createUser(@RequestBody RegisterRequest registerRequest){
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(registerRequest));
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> getAllUsers(){
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 }
+

@@ -17,7 +17,7 @@ import java.util.HashSet;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,13 +43,4 @@ public class User {
 
 //    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    private HashSet<Role> roles = new HashSet<>();
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdDate;
-    private String createdBy;
-
-    @UpdateTimestamp
-    private LocalDateTime lastModifiedDate;
-    private String lastModifiedBy;
 }

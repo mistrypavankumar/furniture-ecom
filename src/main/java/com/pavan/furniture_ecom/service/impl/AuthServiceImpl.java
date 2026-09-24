@@ -53,9 +53,7 @@ public class AuthServiceImpl implements AuthService {
                     .email(registerRequest.getEmail())
                     .firstName(registerRequest.getFirstName())
                     .isAdmin(false)
-                    .createdBy("SYSTEM")
                     .lastName(registerRequest.getLastName())
-                    .lastModifiedBy("SYSTEM")
                     .contactNumber(registerRequest.getContactNumber())
                     .active(true)
                     .build());
