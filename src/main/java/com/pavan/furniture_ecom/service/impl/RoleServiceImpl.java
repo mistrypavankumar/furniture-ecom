@@ -89,9 +89,18 @@ public class RoleServiceImpl implements RoleService {
                 "ROLE_NOT_FOUND"));
 
         User user = userService.findUserById(userId);
-        role.setUser(user);
+        user.getRoles().add(role);
         role = roleRepository.save(role);
         return mapToRoleResponse(role);
+    }
+
+    @Override
+    public List<UserResponse> getUsersByRoleId(Long id) {
+        Role role = roleRepository.findById(id).orElseThrow(() -> new AppException("Role not found with id: " + id,
+                HttpStatus.NOT_FOUND,
+                "ROLE_NOT_FOUND"));
+
+        return userService.getUsersByRoleId(id);
     }
 
     private RoleResponse mapToRoleResponse(Role role) {

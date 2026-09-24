@@ -74,6 +74,14 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public List<UserResponse> getUsersByRoleId(Long roleId) {
+        return userRepository.findByRoles_Id(roleId)
+                .stream()
+                .map(this::mapToUserResponse)
+                .toList();
+    }
+
     private UserResponse mapToUserResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())

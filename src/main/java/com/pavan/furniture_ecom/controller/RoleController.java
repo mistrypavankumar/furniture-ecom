@@ -3,6 +3,7 @@ package com.pavan.furniture_ecom.controller;
 import com.pavan.furniture_ecom.dto.role.RoleCreateInput;
 import com.pavan.furniture_ecom.dto.role.RoleResponse;
 import com.pavan.furniture_ecom.dto.role.RoleUpdateInput;
+import com.pavan.furniture_ecom.dto.user.UserResponse;
 import com.pavan.furniture_ecom.model.Role;
 import com.pavan.furniture_ecom.service.RoleService;
 import jakarta.validation.Valid;
@@ -49,5 +50,10 @@ public class RoleController {
     @PutMapping("/{id}/assign/{userId}")
     public ResponseEntity<RoleResponse> assignUserToRole(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
         return ResponseEntity.status(HttpStatus.OK).body(roleService.assignUserToRole(id, userId));
+    }
+
+    @GetMapping("/{id}/users")
+    public ResponseEntity<List<UserResponse>> getUsersByRoleId(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(roleService.getUsersByRoleId(id));
     }
 }

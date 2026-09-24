@@ -16,4 +16,6 @@ public interface UserService {
     User findUserById(Long userId);
 
     UserResponse getCurrentAppUser();
+
+    List<UserResponse> getUsersByRoleId(Long roleId);
 }
