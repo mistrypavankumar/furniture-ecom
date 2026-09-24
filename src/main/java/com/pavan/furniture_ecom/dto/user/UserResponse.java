@@ -1,5 +1,6 @@
 package com.pavan.furniture_ecom.dto.user;
 
+import com.pavan.furniture_ecom.dto.role.RoleResponse;
 import com.pavan.furniture_ecom.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,7 @@ public class UserResponse {
     private String contactNumber;
     private Boolean isAdmin;
     private Boolean active;
-    private List<Role>  roles;
+    private List<RoleResponse>  roles;
 
     private LocalDateTime createdDate;
     private String createdBy;

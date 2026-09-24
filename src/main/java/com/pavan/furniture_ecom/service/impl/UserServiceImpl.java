@@ -1,5 +1,6 @@
 package com.pavan.furniture_ecom.service.impl;
 
+import com.pavan.furniture_ecom.dto.role.RoleResponse;
 import com.pavan.furniture_ecom.dto.user.UserResponse;
 import com.pavan.furniture_ecom.exception.AppException;
 import com.pavan.furniture_ecom.model.User;
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
                 .lastName(user.getLastName())
                 .active(user.getActive())
                 .email(user.getEmail())
-                .roles(user.getRoles())
+                .roles(user.getRoles().stream().map(RoleResponse::from).toList())
                 .isAdmin(user.getIsAdmin())
                 .createdBy(user.getCreatedBy())
                 .lastModifiedBy(user.getLastModifiedBy())
