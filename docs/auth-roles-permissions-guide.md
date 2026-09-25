@@ -1287,8 +1287,11 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public List<Permission> findByEntity(String entityName) {
-        return permissionRepository.findByEntityName(entityName);
+    public List<PermissionResponse> findByEntity(String entityName) {
+        // Map to DTOs here, in the service. The controller just passes them on.
+        return permissionRepository.findByEntityName(entityName).stream()
+                .map(PermissionResponse::from)
+                .toList();
     }
 
     // Fail loudly if any id doesn't exist
@@ -1323,8 +1326,7 @@ public class PermissionController {
     // List permissions so the admin can find the ids: GET /api/permissions?entity=User
     @GetMapping
     public ResponseEntity<List<PermissionResponse>> list(@RequestParam String entity) {
-        return ResponseEntity.ok(permissionService.findByEntity(entity).stream()
-                .map(PermissionResponse::from).toList());
+        return ResponseEntity.ok(permissionService.findByEntity(entity));   // already DTOs
     }
 
     @PostMapping

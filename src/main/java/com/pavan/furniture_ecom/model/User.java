@@ -53,4 +53,7 @@ public class User extends Auditable {
     )
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
+
+    @Override @Transient
+    public String getOwnerEmail() { return email; }
 }

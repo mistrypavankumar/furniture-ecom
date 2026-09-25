@@ -18,6 +18,7 @@ public class RowAccessGuard {
 
     private final PermissionChecker permissionChecker;
 
+    /** Returns ALL or OWN, or throws 403. */
     public PermissionScope requireScope(Class<?> entity, Operation operation) {
         return permissionChecker.resolveScope(entity, operation)
                 .orElseThrow(() -> new AccessDeniedException(

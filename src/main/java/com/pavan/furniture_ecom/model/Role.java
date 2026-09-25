@@ -28,7 +28,10 @@ public class Role extends Auditable {
     @JoinTable(
             name = "tbl_role_permission",
             joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id")
+            inverseJoinColumns = @JoinColumn(name = "permission_id"),
+            uniqueConstraints = {
+                    @UniqueConstraint(columnNames = {"role_id", "permission_id"})
+            }
     )
     @Builder.Default
     @ToString.Exclude

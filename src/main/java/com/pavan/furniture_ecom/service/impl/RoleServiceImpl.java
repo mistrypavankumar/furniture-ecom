@@ -1,10 +1,13 @@
 package com.pavan.furniture_ecom.service.impl;
 
+import com.pavan.furniture_ecom.dto.permission.PermissionResponse;
 import com.pavan.furniture_ecom.dto.role.RoleCreateInput;
+import com.pavan.furniture_ecom.dto.role.RolePermissionResponse;
 import com.pavan.furniture_ecom.dto.role.RoleResponse;
 import com.pavan.furniture_ecom.dto.role.RoleUpdateInput;
 import com.pavan.furniture_ecom.dto.user.UserResponse;
 import com.pavan.furniture_ecom.exception.AppException;
+import com.pavan.furniture_ecom.model.Permission;
 import com.pavan.furniture_ecom.model.Role;
 import com.pavan.furniture_ecom.model.User;
 import com.pavan.furniture_ecom.model.enums.PowerRole;
@@ -17,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -114,6 +118,30 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findById(roleId).orElseThrow(() -> new AppException("Role not found with id: " + roleId,
                 HttpStatus.NOT_FOUND,
                 "ROLE_NOT_FOUND"));
+    }
+
+    @Override
+    @Transactional(readOnly = true)   // role.permissions is LAZY: load it inside a transaction
+    public RolePermissionResponse getAllPermissionByRoleId(Long roleId, String entity) {
+        Role role = findByRoleId(roleId);
+
+        List<PermissionResponse> permissions = role.getPermissions()
+                .stream()
+                // no entity given → keep all; otherwise keep only that entity ("product" matches "Product")
+                .filter(p -> entity == null || entity.isBlank() || p.getEntityName().equalsIgnoreCase(entity))
+                .sorted(Comparator.comparing(Permission::getEntityName)
+                        .thenComparing(Permission::getLevel)
+                        .thenComparing(Permission::getOperation)
+                        .thenComparing(p -> Objects.toString(p.getFieldName(), "")))
+                .map(PermissionResponse::from)
+                .toList();
+
+        return RolePermissionResponse.builder()
+                .roleId(role.getId())
+                .name(role.getName())
+                .isAdmin(role.getIsAdmin())
+                .permissions(permissions)
+                .build();
     }
 
     private RoleResponse mapToRoleResponse(Role role) {

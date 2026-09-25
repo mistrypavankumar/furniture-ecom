@@ -34,6 +34,7 @@ public class PermissionChecker {
     public Optional<PermissionScope> resolveScope(Class<?> entity, Operation operation){
         User user = currentUser();
 
+        // 1. Admin role → everything allowed
         if(user.getRoles().stream().anyMatch(role -> Boolean.TRUE.equals(role.getIsAdmin()))){
             return Optional.of(PermissionScope.ALL);
         }
@@ -45,6 +46,7 @@ public class PermissionChecker {
         List<Long> roleIds = user.getRoles().stream().map(Role::getId).toList();
         String entityName = entity.getSimpleName();
 
+        // 2. Best scope wins: check ALL first, then OWN
         if(permissionRepository.existsGrant(roleIds, PermissionLevel.OBJECT, operation, entityName, Set.of(PermissionScope.ALL))){
             return Optional.of(PermissionScope.ALL);
         }

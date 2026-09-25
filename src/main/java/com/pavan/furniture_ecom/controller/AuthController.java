@@ -1,6 +1,7 @@
 package com.pavan.furniture_ecom.controller;
 
 import com.pavan.furniture_ecom.dto.auth.LoginRequest;
+import com.pavan.furniture_ecom.dto.auth.RefreshRequest;
 import com.pavan.furniture_ecom.dto.auth.RegisterRequest;
 import com.pavan.furniture_ecom.dto.auth.TokenResponse;
 import com.pavan.furniture_ecom.dto.user.UserResponse;
@@ -33,9 +34,19 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
-    @GetMapping
+    @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentAppUser(){
         return ResponseEntity.ok(userService.getCurrentAppUser());
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenResponse> refresh(@Valid @RequestBody RefreshRequest refreshRequest) {
+        return ResponseEntity.ok(keycloakAuthClient.refresh(refreshRequest.getRefreshToken()));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@Valid @RequestBody RefreshRequest refreshRequest) {
+        keycloakAuthClient.logout(refreshRequest.getRefreshToken());
+        return ResponseEntity.noContent().build();
+    }
 }

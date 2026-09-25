@@ -15,6 +15,7 @@ import java.nio.file.AccessDeniedException;
 public class RequirePermissionAspect {
     private final PermissionChecker permissionChecker;
 
+    // "Before any method annotated with @RequirePermission, call me and pass the annotation"
     @Before("@annotation(requirePermission")
     public void checkPermission(RequirePermission requirePermission) throws AccessDeniedException {
         boolean allowed = permissionChecker.hasPermission(

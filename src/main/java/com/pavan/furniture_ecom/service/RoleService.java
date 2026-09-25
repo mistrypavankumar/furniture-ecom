@@ -1,6 +1,7 @@
 package com.pavan.furniture_ecom.service;
 
 import com.pavan.furniture_ecom.dto.role.RoleCreateInput;
+import com.pavan.furniture_ecom.dto.role.RolePermissionResponse;
 import com.pavan.furniture_ecom.dto.role.RoleResponse;
 import com.pavan.furniture_ecom.dto.role.RoleUpdateInput;
 import com.pavan.furniture_ecom.dto.user.UserResponse;
@@ -23,4 +24,6 @@ public interface RoleService {
     List<UserResponse> getUsersByRoleId(Long id);
 
     Role findByRoleId(Long roleId);
+
+    RolePermissionResponse getAllPermissionByRoleId(Long roleId, String entity);
 }

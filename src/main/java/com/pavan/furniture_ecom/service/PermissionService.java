@@ -1,9 +1,12 @@
 package com.pavan.furniture_ecom.service;
 
+import com.pavan.furniture_ecom.dto.permission.PermissionResponse;
+
 import java.util.List;
 
 public interface PermissionService {
-    boolean assignPermissionToRole(Long roleId, List<Long> permissionIds);
+    void assignPermissionToRole(Long roleId, List<Long> permissionIds);
+    void removePermissionsFromRole(Long roleId, List<Long> permissionIds);
 
-    boolean removePermissionsFromRole(Long roleId, List<Long> permissionIds);
+    List<PermissionResponse> findByEntity(String entity);
 }
