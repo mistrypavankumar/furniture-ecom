@@ -41,4 +41,23 @@ public class PermissionServiceImpl implements PermissionService {
         role.getPermissions().addAll(permissions);
         return true;
     }
+
+    @Override
+    public boolean removePermissionsFromRole(Long roleId, List<Long> permissionIds) {
+        Role role = roleService.findByRoleId(roleId);
+
+        List<Permission> permissions = permissionRepository.findAllById(permissionIds);
+
+        if(permissions.size() != new HashSet<>(permissionIds).size()){
+            Set<Long> foundIds = permissions.stream().map(Permission::getId).collect(Collectors.toSet());
+            List<Long> missingIds = permissionIds.stream().filter(id -> !foundIds.contains(id)).distinct().toList();
+
+            throw new AppException("Permissions not found with ids: " + missingIds,
+                    HttpStatus.NOT_FOUND,
+                    "PERMISSIONS_NOT_FOUND");
+        }
+
+        permissions.forEach(role.getPermissions()::remove);
+        return true;
+    }
 }

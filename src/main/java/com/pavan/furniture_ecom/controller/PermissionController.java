@@ -4,6 +4,7 @@ import com.pavan.furniture_ecom.service.PermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,5 +26,13 @@ public class PermissionController {
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to assign permission");
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> removePermissionsFromRole(Long roleId, List<Long> permissionIds) {
+        if(permissionService.removePermissionsFromRole(roleId, permissionIds)){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Permission removed successfully");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to remove permission");
     }
 }

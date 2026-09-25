@@ -3,6 +3,7 @@ package com.pavan.furniture_ecom.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,6 +12,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +20,7 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-abstract class Auditable {
+public abstract class Auditable implements Ownable {
 
     @CreatedDate
     @Column(updatable = false, nullable = false)
@@ -33,4 +35,11 @@ abstract class Auditable {
 
     @LastModifiedBy
     private String lastModifiedBy;
+
+    @Override
+    @Transient
+    public String getOwnerEmail(){
+        return createdBy;
+    }
+
 }
